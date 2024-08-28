@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS item (
     brand TEXT default '',
     amount INTEGER default 1,
     note TEXT,
-    expiredDate DATE
+    expiredDate DATE default null
 );
 
 INSERT INTO item (ean, title, brand, amount, note, expiredDate) 

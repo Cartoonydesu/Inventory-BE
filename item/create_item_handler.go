@@ -4,16 +4,17 @@ import (
 	"cartoonydesu/response"
 	"log"
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
 type NewItem struct {
-	Ean         string `json:"ean" binding:"required"`
-	Title       string `json:"title" binding:"required"`
-	Brand       string `json:"brand"`
-	Amount      int    `json:"amount" binding:"required"`
-	Note        string `json:"note"`
-	ExpiredDate string `json:"expiredDate"`
+	Ean         string  `json:"ean" binding:"required"`
+	Title       string  `json:"title" binding:"required"`
+	Brand       string  `json:"brand"`
+	Amount      int     `json:"amount" binding:"required"`
+	Note        string  `json:"note"`
+	ExpiredDate *string `json:"expiredDate"`
 }
 
 func (h *Handler) AddNewItem(c *gin.Context) {
