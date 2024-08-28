@@ -11,7 +11,7 @@ import (
 func (h *Handler) GetAllItems(c *gin.Context) {
 	rows, err := h.Db.Query("SELECT itemId, ean, title, brand, amount, note, expiredDate FROM item;")
 	if err != nil {
-		log.Panic(err)
+		c.JSON(http.StatusBadRequest, response.ErrorResponse("error", "Query error"))
 		return
 	}
 	defer rows.Close()
@@ -20,7 +20,7 @@ func (h *Handler) GetAllItems(c *gin.Context) {
 		var inv Item
 		err := rows.Scan(&inv.ItemId, &inv.Ean, &inv.Title, &inv.Brand, &inv.Amount, &inv.Note, &inv.ExpiredDate)
 		if err != nil {
-			log.Panic(err)
+			c.JSON(http.StatusBadRequest, response.ErrorResponse("error", "Can not extract data from database"))
 			return
 		}
 		invs = append(invs, inv)
