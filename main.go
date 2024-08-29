@@ -41,7 +41,7 @@ func main() {
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:8081"},
-		AllowMethods: []string{"GET", "POST"},
+		AllowMethods: []string{"GET", "POST", "DELETE"},
 		AllowHeaders: []string{"Content-Type"},
 	}))
 	item.SetRouter(r, db)

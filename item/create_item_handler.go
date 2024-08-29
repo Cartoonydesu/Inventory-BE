@@ -34,7 +34,7 @@ func (h *Handler) AddNewItem(c *gin.Context) {
 	defer stmt.Close()
 	if _, err := stmt.Exec(i.Ean, i.Title, i.Brand, i.Amount, i.Note, i.ExpiredDate); err != nil {
 		log.Print(err)
-		c.JSON(http.StatusBadRequest, response.ErrorResponse("error", "Object already exists"))
+		c.JSON(http.StatusBadRequest, response.ErrorResponse("error", err.Error()))
 		return
 	}
 	c.JSON(http.StatusOK, response.SuccessResponse("success", i))
