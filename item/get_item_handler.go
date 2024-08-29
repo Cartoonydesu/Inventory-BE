@@ -2,29 +2,38 @@ package item
 
 import (
 	"cartoonydesu/response"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) GetAllItems(c *gin.Context) {
-	rows, err := h.Db.Query("SELECT itemId, ean, title, brand, amount, note, expiredDate FROM item;")
+	rows, err := h.Db.Query("SELECT itemId, ean, title, brand, amount, note, expiredDate FROM item")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.ErrorResponse("error", "Query error"))
 		return
 	}
 	defer rows.Close()
-	var invs []Item
+	var items []Item
 	for rows.Next() {
-		var inv Item
-		err := rows.Scan(&inv.ItemId, &inv.Ean, &inv.Title, &inv.Brand, &inv.Amount, &inv.Note, &inv.ExpiredDate)
+		var i Item
+		err := rows.Scan(&i.ItemId, &i.Ean, &i.Title, &i.Brand, &i.Amount, &i.Note, &i.ExpiredDate)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, response.ErrorResponse("error", "Can not extract data from database"))
+			c.JSON(http.StatusBadRequest, response.ErrorResponse("error", err.Error()))
 			return
 		}
-		invs = append(invs, inv)
+		items = append(items, i)
 	}
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.JSON(http.StatusOK, response.SuccessResponse("success", invs))
+	// c.Header("Access-Control-Allow-Origin", "*")
+	c.JSON(http.StatusOK, response.SuccessResponse("success", items))
+}
+
+func (h *Handler) getItemById(key string) (Item, error) {
+	row := h.Db.QueryRow("SELECT itemId, ean, title, brand, amount, note, expiredDate FROM item WHERE itemId = $1", key)
+	var i Item
+	err := row.Scan(&i.ItemId, &i.Ean, &i.Title, &i.Brand, &i.Amount, &i.Note, &i.ExpiredDate)
+	if err != nil {
+		return Item{}, err
+	}
+	return i, nil
 }
